@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ЦЭ English</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:    #00B8AA;
+      --teal-l:  #E0F9F7;
+      --teal-m:  #AAEEE9;
+      --orange:  #FF5500;
+      --pink:    #EF3F99;
+      --ink:     #111111;
+      --sub:     #444444;
+      --muted:   #888888;
+      --border:  #E4E4E4;
+      --bg:      #FFFFFF;
+      --off:     #F8F8F6;
+      --sans:    'Geist', system-ui, sans-serif;
+      --mono:    'Geist Mono', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 56px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); }
+    .logo-sq {
+      width: 26px; height: 26px;
+      background: var(--teal); border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 10px; font-weight: 700; color: #fff;
+    }
+    .logo-name { font-size: 14px; font-weight: 600; }
+    .logo-name em { color: var(--teal); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .nav-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-link:hover { color: var(--ink); }
+    .nav-btn {
+      font-size: 13px; font-weight: 600; font-family: var(--sans);
+      background: var(--ink); color: #fff;
+      border: none; border-radius: 7px;
+      padding: 7px 16px; cursor: pointer; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .nav-btn:hover { opacity: .75; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 120px 48px 80px;
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 48px; align-items: center;
+    }
+    .hero-left { max-width: 600px; }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px; color: var(--teal);
+      background: var(--teal-l);
+      border: 1px solid var(--teal-m);
+      padding: 4px 12px; border-radius: 100px;
+      display: inline-block; margin-bottom: 28px;
+      opacity: 0; animation: up .5s .1s ease forwards;
+    }
+
+    h1 {
+      font-size: clamp(38px, 5.5vw, 64px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+      margin-bottom: 20px;
+      opacity: 0; animation: up .6s .25s ease forwards;
+    }
+    h1 .c-teal   { color: var(--teal); }
+    h1 .c-orange { color: var(--orange); }
+
+    .hero-desc {
+      font-size: 17px; color: var(--sub);
+      line-height: 1.7; margin-bottom: 32px; max-width: 480px;
+      opacity: 0; animation: up .5s .4s ease forwards;
+    }
+    .hero-desc b { color: var(--ink); font-weight: 600; }
+
+    .hero-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;
+      opacity: 0; animation: up .5s .55s ease forwards;
+    }
+    .btn-teal {
+      background: var(--teal); color: #fff;
+      border: none; border-radius: 8px; padding: 11px 24px;
+      font-family: var(--sans); font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 7px;
+      transition: background .15s;
+    }
+    .btn-teal:hover { background: #009E92; }
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 11px 20px;
+      font-family: var(--sans); font-size: 14px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .15s;
+    }
+    .btn-outline:hover { border-color: var(--ink); }
+
+    .hero-stats {
+      display: flex; gap: 32px;
+      opacity: 0; animation: up .5s .7s ease forwards;
+    }
+    .hstat-num { font-size: 22px; font-weight: 700; line-height: 1; }
+    .hstat-num.t { color: var(--teal); }
+    .hstat-num.o { color: var(--orange); }
+    .hstat-lbl { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    /* Score on right */
+    .hero-score {
+      opacity: 0; animation: up .7s .3s ease forwards;
+      text-align: right;
+    }
+    .score-big {
+      font-family: var(--mono);
+      font-size: clamp(80px, 12vw, 140px);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--orange);
+      letter-spacing: -3px;
+      display: block;
+    }
+    .score-cap {
+      font-family: var(--mono);
+      font-size: 11px; color: var(--muted);
+      text-align: right; margin-top: 6px;
+      line-height: 1.5;
+    }
+    .score-cap strong { color: var(--orange); font-weight: 700; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── QUESTION DEMO ── */
+    .demo-section { padding: 72px 48px; max-width: 1100px; margin: 0 auto; }
+    .demo-section .sec-label { margin-bottom: 14px; }
+    .demo-section h2 { font-size: clamp(22px,3vw,32px); font-weight:700; letter-spacing:-.5px; margin-bottom: 32px; }
+
+    .q-wrap {
+      max-width: 520px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    }
+    .q-header {
+      padding: 14px 20px;
+      background: var(--off);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .q-section-tag {
+      font-family: var(--mono); font-size: 11px; font-weight: 700;
+      background: var(--orange); color: #fff;
+      padding: 3px 10px; border-radius: 100px;
+    }
+    .q-progress { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .q-body { padding: 22px 20px; }
+    .q-context {
+      font-size: 14px; color: var(--sub); line-height: 1.65;
+      background: var(--teal-l);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .q-ask { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 14px; }
+    .q-options { display: flex; flex-direction: column; gap: 8px; }
+    .q-opt {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px; color: var(--sub);
+      cursor: pointer;
+      transition: border-color .15s, background .15s, color .15s;
+      user-select: none;
+    }
+    .q-opt:hover { border-color: var(--teal); background: var(--teal-l); color: var(--ink); }
+    .q-opt.correct { border-color: var(--teal); background: var(--teal-l); color: #007A72; font-weight: 600; pointer-events: none; }
+    .q-opt.wrong   { border-color: #FECACA; background: #FFF5F5; color: #DC2626; pointer-events: none; }
+    .q-opt.dim     { opacity: .4; pointer-events: none; }
+    .q-num {
+      width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+      background: var(--off); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted);
+      transition: all .15s;
+    }
+    .q-opt.correct .q-num { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .q-opt.wrong   .q-num { background: #FCA5A5; border-color: #FCA5A5; color: #fff; }
+    .q-feedback {
+      margin-top: 16px; padding: 14px;
+      background: var(--teal-l);
+      border: 1px solid var(--teal-m);
+      border-radius: 10px;
+      font-size: 14px; color: var(--sub); line-height: 1.6;
+      display: none;
+    }
+    .q-feedback.show { display: block; }
+    .q-fb-ok { font-weight: 700; color: #007A72; margin-bottom: 6px; }
+
+    /* ── FEATURES ── */
+    .features-section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .feat-list { display: flex; flex-direction: column; }
+    .feat-row {
+      display: grid; grid-template-columns: 80px 1fr 180px;
+      gap: 24px; align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feat-row:first-child { border-top: 1px solid var(--border); }
+    .feat-n {
+      font-family: var(--mono); font-size: 32px; font-weight: 700;
+      line-height: 1; color: var(--border);
+    }
+    .feat-row:nth-child(1) .feat-n { color: var(--orange); }
+    .feat-row:nth-child(2) .feat-n { color: var(--teal); }
+    .feat-row:nth-child(3) .feat-n { color: var(--pink); }
+    .feat-row:nth-child(4) .feat-n { color: var(--orange); }
+    .feat-mid {}
+    .feat-title { font-size: 17px; font-weight: 600; margin-bottom: 5px; }
+    .feat-desc { font-size: 14px; color: var(--sub); line-height: 1.6; }
+    .feat-tag {
+      font-family: var(--mono); font-size: 11px;
+      padding: 5px 10px; border-radius: 6px;
+      text-align: center; white-space: nowrap;
+    }
+    .feat-tag.orange { background: #FFF1EA; color: var(--orange); }
+    .feat-tag.teal   { background: var(--teal-l); color: #007A72; }
+    .feat-tag.pink   { background: #FDE8F4; color: var(--pink); }
+
+    /* section header */
+    .sec-header { margin-bottom: 36px; }
+    .sec-label {
+      font-family: var(--mono); font-size: 11px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    h2.sec-title {
+      font-size: clamp(24px, 3.5vw, 36px); font-weight: 700;
+      letter-spacing: -1px; line-height: 1.15;
+    }
+
+    /* ── SECTIONS GRID ── */
+    .sections-wrap { background: var(--off); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sections-inner { max-width: 1100px; margin: 0 auto; padding: 56px 48px; }
+    .sections-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px;
+    }
+    .sec-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      transition: border-color .15s;
+    }
+    .sec-item:hover { border-color: var(--teal); }
+    .sec-t {
+      font-family: var(--mono); font-size: 9px; font-weight: 700;
+      width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sec-t.a { background: var(--teal-l); color: #007A72; }
+    .sec-t.b { background: #FFF1EA; color: var(--orange); }
+
+    /* ── REVIEWS ── */
+    .reviews-section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .review {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .review-stars { color: var(--orange); font-size: 13px; letter-spacing: 1px; }
+    .review-text { font-size: 14px; color: var(--sub); line-height: 1.65; flex: 1; }
+    .review-text b { color: var(--teal); }
+    .review-badge {
+      font-family: var(--mono); font-size: 10px; font-weight: 600;
+      padding: 4px 10px; border-radius: 100px; align-self: flex-start;
+    }
+    .rb-t { background: var(--teal-l); color: #007A72; }
+    .rb-o { background: #FFF1EA; color: var(--orange); }
+    .rb-p { background: #FDE8F4; color: var(--pink); }
+    .review-by { display: flex; align-items: center; gap: 9px; }
+    .r-av {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11px; font-weight: 700;
+    }
+    .av-t { background: var(--teal-l); color: #007A72; }
+    .av-o { background: #FFF1EA; color: var(--orange); }
+    .av-p { background: #FDE8F4; color: var(--pink); }
+    .r-name { font-size: 13px; font-weight: 600; }
+    .r-role { font-size: 11px; color: var(--muted); }
+
+    /* ── PRICING ── */
+    .pricing-section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; align-items: start; }
+    .plan {
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+    }
+    .plan.pop { border-color: var(--teal); border-width: 2px; }
+    .plan-badge {
+      position: absolute; top: -11px; left: 20px;
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      background: var(--teal); color: #fff;
+      padding: 3px 12px; border-radius: 100px;
+    }
+    .plan-name { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .5px; margin-bottom: 10px; text-transform: uppercase; }
+    .plan-price {
+      font-size: 38px; font-weight: 700; letter-spacing: -1px; line-height: 1;
+      margin-bottom: 4px;
+    }
+    .plan-price span { font-size: 14px; font-weight: 400; color: var(--muted); }
+    .plan-note { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .plan-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+    .plan-list li { font-size: 13px; display: flex; gap: 8px; }
+    .plan-list .ok  { color: var(--teal); font-weight: 700; flex-shrink: 0; }
+    .plan-list .no  { color: var(--border); flex-shrink: 0; }
+    .plan-list .no + span { color: #C0C0C0; }
+    .plan-btn {
+      display: block; text-align: center; text-decoration: none;
+      padding: 11px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; font-family: var(--sans);
+      transition: all .15s;
+    }
+    .plan-btn.fill { background: var(--teal); color: #fff; }
+    .plan-btn.fill:hover { background: #009E92; }
+    .plan-btn.line { border: 1px solid var(--border); color: var(--ink); }
+    .plan-btn.line:hover { border-color: var(--teal); background: var(--teal-l); }
+
+    /* ── CTA ── */
+    .cta-section { padding: 0 48px 80px; max-width: 1100px; margin: 0 auto; }
+    .cta-box {
+      background: var(--ink); border-radius: 16px;
+      padding: 60px 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 28px;
+      position: relative; overflow: hidden;
+    }
+    /* one clean color accent — no blobs */
+    .cta-box::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(to bottom, var(--teal), var(--pink), var(--orange));
+    }
+    .cta-h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 700; color: #fff; letter-spacing: -.5px; margin-bottom: 6px; }
+    .cta-p  { font-size: 15px; color: rgba(255,255,255,.45); }
+    .btn-white {
+      background: #fff; color: var(--ink);
+      border: none; border-radius: 8px; padding: 13px 26px;
+      font-family: var(--sans); font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 7px;
+      transition: opacity .15s; white-space: nowrap;
+    }
+    .btn-white:hover { opacity: .88; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1100px; margin: 0 auto;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .f-brand { font-size: 13px; font-weight: 600; }
+    .f-brand em { color: var(--teal); font-style: normal; }
+    .f-links { display: flex; gap: 18px; }
+    .f-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .f-links a:hover { color: var(--ink); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes up { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; }
+      .nav-links .nav-link { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 90px 20px 56px; gap: 32px; }
+      .hero-score { text-align: left; }
+      .term-section, .features-section, .reviews-section, .pricing-section { padding: 56px 20px; }
+      .sections-inner { padding: 48px 20px; }
+      .cta-section { padding: 0 20px 56px; }
+      .cta-box { padding: 40px 28px; }
+      footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .feat-row { grid-template-columns: 56px 1fr; }
+      .feat-row .feat-tag { display: none; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .sections-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-sq">E</div>
+    <span class="logo-name">ЦЭ <em>English</em></span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#features">Возможности</a>
+    <a class="nav-link" href="#teachers">Учителям</a>
+    <a class="nav-link" href="#pricing">Тарифы</a>
+  </div>
+  <a class="nav-btn" href="https://t.me/all4ct_bot" target="_blank">Открыть бот →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">// подготовка к ЦЭ / ЦТ 2027</div>
+    <h1>
+      Готовься к ЦЭ<br/>
+      по английскому.<br/>
+      <span class="c-teal">Сдай на 10.</span>
+    </h1>
+    <p class="hero-desc">
+      Бот знает <b>все 14 разделов</b> изнутри — А1–А18 и В1–В22.
+      Объяснение после каждого ответа. Реальный балл по таблице РИКЗ.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-teal" href="https://t.me/all4ct_bot" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.012 9.483c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.384l-2.95-.924c-.64-.203-.654-.64.136-.948l11.526-4.444c.537-.194 1.006.131.37.18z"/></svg>
+        Начать бесплатно
+      </a>
+      <a class="btn-outline" href="#demo">Попробовать вопрос</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num t">247+</div>
+        <div class="hstat-lbl">заданий в банке</div>
+      </div>
+      <div>
+        <div class="hstat-num">14</div>
+        <div class="hstat-lbl">разделов ЦЭ</div>
+      </div>
+      <div>
+        <div class="hstat-num o">0 BYN</div>
+        <div class="hstat-lbl">14 вопросов/день</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-score">
+    <span class="score-big" id="scoreNum">0</span>
+    <div class="score-cap">
+      баллов на пробном тесте<br/>
+      <strong>а мог быть 100 →</strong>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- QUESTION DEMO -->
+<div class="demo-section" id="demo">
+  <div class="sec-label">// попробуй прямо здесь</div>
+  <h2>Вот как выглядит бот</h2>
+  <div class="q-wrap reveal">
+    <div class="q-header">
+      <span class="q-section-tag">А5 — Артикли</span>
+      <span class="q-progress">3 / 40</span>
+    </div>
+    <div class="q-body">
+      <div class="q-context">
+        Scientists around the world are studying ___ impact of climate change on marine ecosystems.
+      </div>
+      <div class="q-ask">Выбери правильный артикль:</div>
+      <div class="q-options" id="qOpts">
+        <div class="q-opt" onclick="pick(this, false)">
+          <div class="q-num">1</div>
+          <span>a</span>
+        </div>
+        <div class="q-opt" onclick="pick(this, true)">
+          <div class="q-num">2</div>
+          <span>the</span>
+        </div>
+        <div class="q-opt" onclick="pick(this, false)">
+          <div class="q-num">3</div>
+          <span>an</span>
+        </div>
+        <div class="q-opt" onclick="pick(this, false)">
+          <div class="q-num">4</div>
+          <span>— (без артикля)</span>
+        </div>
+      </div>
+      <div class="q-feedback" id="qFb">
+        <div class="q-fb-ok">✅ Верно! — the</div>
+        <div><b>the</b> — определённый артикль. «Impact» здесь конкретное понятие из контекста. Неопределённый <b>a</b> не подходит — это не первое упоминание предмета.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="sec-header reveal">
+    <div class="sec-label">// возможности</div>
+    <h2 class="sec-title">Всё для реального балла</h2>
+  </div>
+  <div class="feat-list reveal">
+    <div class="feat-row">
+      <div class="feat-n">01</div>
+      <div class="feat-mid">
+        <div class="feat-title">Тренировка по всем 14 разделам</div>
+        <div class="feat-desc">А1–А18 и В1–В22 отдельно. Выбираешь слабое место — прорешиваешь именно его.</div>
+      </div>
+      <div class="feat-tag orange">14 разделов</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-n">02</div>
+      <div class="feat-mid">
+        <div class="feat-title">Пробный тест + балл по таблице РИКЗ</div>
+        <div class="feat-desc">40 вопросов в структуре реального ЦЭ. Тестовый балл по официальной таблице РИКЗ 2026.</div>
+      </div>
+      <div class="feat-tag teal">РИКЗ 2026</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-n">03</div>
+      <div class="feat-mid">
+        <div class="feat-title">Режим «Мои пробелы»</div>
+        <div class="feat-desc">Бот сохраняет каждый неверный ответ и видит разделы ниже 60% — и строит из этого персональную тренировку.</div>
+      </div>
+      <div class="feat-tag pink">авто-анализ</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-n">04</div>
+      <div class="feat-mid">
+        <div class="feat-title">Режим экзамена с таймером 120 мин</div>
+        <div class="feat-desc">Таймер, структура А→В, как на настоящем ЦЭ. Тренируй темп, не только знания.</div>
+      </div>
+      <div class="feat-tag orange">120 мин</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTIONS -->
+<div class="sections-wrap">
+  <div class="sections-inner reveal">
+    <div class="sec-label" style="margin-bottom:14px;">// 14 разделов экзамена</div>
+    <div class="sections-grid">
+      <div class="sec-item"><span class="sec-t a">А</span> А1–А4 Времена</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А5 Артикли</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А6 Детерминативы</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А7 Прилагательные</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А8 Степени сравнения</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А9–А12 Лексика</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А13 Реплика-стимул</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А14 Диалог</div>
+      <div class="sec-item"><span class="sec-t a">А</span> А15–А18 Чтение</div>
+      <div class="sec-item"><span class="sec-t b">В</span> В1–В3 Предлоги</div>
+      <div class="sec-item"><span class="sec-t b">В</span> В4–В6 Одно слово</div>
+      <div class="sec-item"><span class="sec-t b">В</span> В7–В8 Два предл.</div>
+      <div class="sec-item"><span class="sec-t b">В</span> В9–В18 Лишнее слово</div>
+      <div class="sec-item"><span class="sec-t b">В</span> В19–В22 Словообразование</div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="sec-header reveal">
+    <div class="sec-label">// отзывы</div>
+    <h2 class="sec-title">Говорят те, кто готовится</h2>
+  </div>
+  <div class="reviews-grid reveal">
+    <div class="review">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">После каждого ответа <b>объяснение правила</b> на русском. В9–В18 наконец стал понятным, а не страшным.</p>
+      <div class="review-badge rb-p">↑ 41% → 74% по слабым темам</div>
+      <div class="review-by">
+        <div class="r-av av-t">А</div>
+        <div><div class="r-name">Аня К.</div><div class="r-role">11 класс, Минск</div></div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">Пробный тест выдаёт <b>реальный балл по РИКЗ</b>. Первый раз 61, потом 74, потом 81. Виден рост.</p>
+      <div class="review-badge rb-o">↑ пробный 61 → 81 за 5 недель</div>
+      <div class="review-by">
+        <div class="r-av av-o">М</div>
+        <div><div class="r-name">Маша Д.</div><div class="r-role">Абитуриент, Гродно</div></div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text"><b>Вижу статистику каждого ученика</b> — сразу понятно что разбирать на уроке. Экономит час в неделю.</p>
+      <div class="review-badge rb-t">12 учеников используют</div>
+      <div class="review-by">
+        <div class="r-av av-p" style="background:#FDE8F4;color:var(--pink)">Е</div>
+        <div><div class="r-name">Елена В.</div><div class="r-role">Репетитор, 8 лет</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHERS -->
+<section class="features-section" id="teachers">
+  <div class="sec-header reveal">
+    <div class="sec-label">// учителям и репетиторам</div>
+    <h2 class="sec-title">Домашка проверяет себя сама</h2>
+  </div>
+  <div class="feat-list reveal">
+    <div class="feat-row">
+      <div class="feat-n">01</div>
+      <div class="feat-mid">
+        <div class="feat-title">Задавай домашку прямо в боте</div>
+        <div class="feat-desc">Выбираешь раздел и срок — ученики получают задание в Telegram. Никаких распечаток и пересылки файлов.</div>
+      </div>
+      <div class="feat-tag teal">2 минуты</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-n">02</div>
+      <div class="feat-mid">
+        <div class="feat-title">Статистика каждого ученика</div>
+        <div class="feat-desc">Видишь, кто сделал, кто нет, и где у кого пробелы — ещё до урока. Урок начинается с разбора, а не с проверки.</div>
+      </div>
+      <div class="feat-tag pink">экономит час в неделю</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-n">03</div>
+      <div class="feat-mid">
+        <div class="feat-title">Ученикам — премиум бесплатно</div>
+        <div class="feat-desc">Один тариф 39 BYN/мес — и до 15 твоих учеников получают полный доступ. Дешевле одного занятия.</div>
+      </div>
+      <div class="feat-tag orange">до 15 учеников</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="sec-header reveal">
+    <div class="sec-label">// тарифы</div>
+    <h2 class="sec-title">Начни бесплатно</h2>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="plan">
+      <div class="plan-name">free</div>
+      <div class="plan-price">0 <span>BYN</span></div>
+      <div class="plan-note">Без регистрации · /start</div>
+      <ul class="plan-list">
+        <li><span class="ok">✓</span> 14 вопросов в день</li>
+        <li><span class="ok">✓</span> Все 14 разделов ЦЭ</li>
+        <li><span class="ok">✓</span> Статистика и серия дней</li>
+        <li><span class="no">✗</span><span> Полный тест 40 вопросов</span></li>
+        <li><span class="no">✗</span><span> Режим экзамена</span></li>
+      </ul>
+      <a class="plan-btn line" href="https://t.me/all4ct_bot" target="_blank">Попробовать</a>
+    </div>
+    <div class="plan pop">
+      <div class="plan-badge">popular</div>
+      <div class="plan-name">premium</div>
+      <div class="plan-price">15 <span>BYN/мес</span></div>
+      <div class="plan-note">ЕРИП или Bepaid · сезон до экзамена — 99 BYN</div>
+      <ul class="plan-list">
+        <li><span class="ok">✓</span> Без ограничений</li>
+        <li><span class="ok">✓</span> Полный тест · 40 вопросов</li>
+        <li><span class="ok">✓</span> Режим экзамена · 120 мин</li>
+        <li><span class="ok">✓</span> Работа над ошибками</li>
+        <li><span class="ok">✓</span> Балл по таблице РИКЗ 2026</li>
+      </ul>
+      <a class="plan-btn fill" href="https://t.me/all4ct_bot" target="_blank">Получить доступ</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">teacher</div>
+      <div class="plan-price">39 <span>BYN/мес</span></div>
+      <div class="plan-note">До 15 учеников</div>
+      <ul class="plan-list">
+        <li><span class="ok">✓</span> Всё из Premium</li>
+        <li><span class="ok">✓</span> Кабинет учителя</li>
+        <li><span class="ok">✓</span> Домашние задания в боте</li>
+        <li><span class="ok">✓</span> Статистика каждого ученика</li>
+        <li><span class="ok">✓</span> Ученикам — премиум бесплатно</li>
+      </ul>
+      <a class="plan-btn line" href="https://t.me/all4ct_bot" target="_blank">Написать нам</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-box reveal">
+    <div>
+      <div class="cta-h2">До ЦЭ 2027 — 11 месяцев</div>
+      <div class="cta-p">14 вопросов бесплатно прямо сейчас. Без регистрации.</div>
+    </div>
+    <a class="btn-white" href="https://t.me/all4ct_bot" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.012 9.483c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.384l-2.95-.924c-.64-.203-.654-.64.136-.948l11.526-4.444c.537-.194 1.006.131.37.18z"/></svg>
+      Открыть бот в Telegram
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--border); margin-top:0;">
+  <footer>
+    <div class="f-brand">ЦЭ <em>English</em></div>
+    <div class="f-links">
+      <a href="#">Telegram</a>
+      <a href="#">Политика</a>
+      <a href="#">Контакт</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  /* Score counter */
+  const el = document.getElementById('scoreNum');
+  let done = false;
+  function count() {
+    if (done) return; done = true;
+    const target = 84, dur = 1600, start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  setTimeout(count, 600);
+
+  /* Question demo */
+  function pick(el, correct) {
+    const opts = document.querySelectorAll('.q-opt');
+    opts.forEach(o => { o.classList.add('dim'); o.onclick = null; });
+    el.classList.remove('dim');
+    if (correct) {
+      el.classList.add('correct');
+    } else {
+      el.classList.add('wrong');
+      // highlight correct answer
+      opts.forEach(o => {
+        if (o.querySelector('span').textContent.trim() === 'the') {
+          o.classList.remove('dim'); o.classList.add('correct');
+        }
+      });
+    }
+    document.getElementById('qFb').classList.add('show');
+  }
+
+  /* Scroll reveal */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
