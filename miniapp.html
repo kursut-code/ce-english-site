@@ -57,6 +57,14 @@
   .streak svg { color: var(--orange); }
   .streak-n { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--orange); }
   .streak-l { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+  .close-btn {
+    width: 34px; height: 34px; flex: none;
+    background: var(--off); border: 1px solid var(--border); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sub); cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .close-btn:active { transform: scale(.92); }
 
   /* ── XP ── */
   .xp-wrap { margin-bottom: 20px; }
@@ -196,6 +204,9 @@
       <div class="streak-n"><span id="streakNum">7</span></div>
       <div class="streak-l">дней подряд</div>
     </div>
+  </div>
+  <div class="close-btn" id="closeBtn" role="button" aria-label="Закрыть">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </div>
 </div>
 
@@ -367,22 +378,9 @@
   }
   load();
 
-  async function sendToBot(cmd) {
-    if (!tg) { alert('Откроется из Telegram: ' + cmd); return; }
+  // Deep link — самый надёжный способ: бот сразу запускает нужный режим
+  const BOT = 'all4ct_bot';
+  function sendToBot(startParam) {
+    if (!tg) { alert('Откроется из Telegram: /start ' + startParam); return; }
     tg.HapticFeedback?.impactOccurred('light');
-    // Через API — работает из любого контекста (кнопка меню, клавиатура)
-    if (API_URL && tg.initData) {
-      try {
-        const r = await fetch(API_URL + '/api/action', {
-          method: 'POST',
-          headers: { 'X-Tg-Init-Data': tg.initData, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cmd }),
-        });
-        if (r.ok) { tg.close(); return; }
-      } catch (e) { /* fallback ниже */ }
-    }
-    // Запасной канал — работает, если открыто кнопкой клавиатуры
-    try { tg.sendData(cmd); } catch (e) { tg.close(); }
-  }
-  document.getElementById('trainBtn').onclick = () => sendToBot('train_weak');
-  document.getElementById('questBtn').onclick = ()
+    tg.openTelegramLink(`https://t.me/${BO
